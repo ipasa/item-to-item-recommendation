@@ -1,7 +1,7 @@
 <?php
 include 'connection/dbconnect.php';
-$id=  1;
-for ($userID=$id; $userID <=$id ; $userID++) {
+
+for ($userID=1; $userID <=1 ; $userID++) {
   $itemFindBasedOnUserSql = "SELECT itemID
           FROM rating
           WHERE userID = $userID";
@@ -10,8 +10,6 @@ for ($userID=$id; $userID <=$id ; $userID++) {
   foreach ($itemFindBasedOnUserResult as $itemFindBasedOnUserResultSingle) {
     $itemID = $itemFindBasedOnUserResultSingle['itemID'];
 
-    // $itemID = 1;
-    // $userID = 1;
     // This code assumes $itemID isset to that of
     // the item that was just rated .
     // Get all of the user's rating pairs
@@ -27,9 +25,14 @@ for ($userID=$id; $userID <=$id ; $userID++) {
     while ($row=mysqli_fetch_assoc($db_result)) {
       $other_itemID = $row['itemID'];
       $rating_difference = $row ['rating_difference'] ;
+      if($rating_difference<0)
+      {
+          $rating_difference=-$rating_difference;
+      }
       // if the pair ( $itemID , $other_itemID ) is already in
       // the dev t a b l e
       // then we want to update 2 rows .
+      if($itemID!=$other_itemID){
       if (mysqli_num_rows(mysqli_query($conn, "SELECT itemID1
         FROM dev WHERE itemID1=$itemID AND itemID2=$other_itemID")) > 0){
           $sql = "UPDATE dev
@@ -38,11 +41,12 @@ for ($userID=$id; $userID <=$id ; $userID++) {
                   mysqli_query($conn, $sql);
         //We only want to update i f the i tems ar e
         // d i f f e r e n t
-        if( $itemID != $other_itemID ){
-        $sql = "UPDATE dev SET count=count+1,sum=sum􀀀-$rating_difference
-                WHERE(itemID1=$other_itemID AND itemID2=$itemID)" ;
+        /*if( $itemID != $other_itemID ){
+        $sql = "UPDATE dev SET count=count+1,
+          sum=sum-$rating_difference
+        WHERE(itemID1=$other_itemID AND itemID2=$itemID)" ;
         mysqli_query($conn, $sql);
-        }
+        }*/
       }
       //we want to i n s e r t 2 rows int o the dev t a b l e
       else {
@@ -51,11 +55,14 @@ for ($userID=$id; $userID <=$id ; $userID++) {
 
         //We only want to i n s e r t i f the i tems ar e
         // d i f f e r e n t
-        if($itemID != $other_itemID){
-          $sql = "INSERT INTO dev VALUES ($other_itemID,$itemID,1,-$rating_difference)";
+       /* if($itemID != $other_itemID){
+          $sql = "INSERT INTO dev VALUES ($other_itemID,$itemID,1,$rating_difference)";
           mysqli_query($conn, $sql);
-          }
+          }*/
         }
+
+      }
+
     }
 
 
