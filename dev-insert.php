@@ -60,3 +60,5 @@ for ($userID=1; $userID <=3 ; $userID++) {
 
   }
 }
+mysqli_close($conn);
+?>

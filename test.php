@@ -13,8 +13,3 @@ for ($userID=1; $userID <=3 ; $userID++) {
     echo $userID.' - '.$itemID.'<br>';
   }
 }
-// $itemID = 2;
-//
-// for ($userID=1; $userID <=0 ; $userID++) {
-//   # code...
-// }
